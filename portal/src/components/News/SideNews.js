@@ -1,12 +1,17 @@
+// imported from node_modules
 import React, { Component } from 'react';
-import SingleSide from './SingleSide';
 import axios from 'axios';
+
+// imported from local project
+import SingleSide from './SingleSide';
+import Error from './Error';
 
 export default class SideNews extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sidenews: []
+      sidenews: [],
+      error: false
     };
     var source = this.props.source;
   };
@@ -20,17 +25,25 @@ export default class SideNews extends Component {
         });
       })
       .catch((error) => {
-        console.log('ERROR: ', error);
+        this.setState({
+          error: true
+        });
       })
   };
 
   renderItems() {
-    return this.state.sidenews.map((item) => {
-      return (
-      <SingleSide key={item.url} item={item} />
-      )}
-    );
+    if(!this.state.error) {
+      return this.state.sidenews.map((item) => {
+        return (
+        <SingleSide key={item.url} item={item} />
+      )})
+    } else {
+        return (
+          <Error />
+        );
+    }
   };
+
   render(){
     return(
       <div>
